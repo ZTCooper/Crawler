@@ -15,7 +15,7 @@ class ProxySpider(scrapy.Spider):
 		items = []
 
 		for i in range(len(soup.select('.country + td'))):
-									#class = country的下一个兄弟标签
+									#class = "country"的下一个兄弟标签
 			item = ProxyItem()
 
 			if i%2 == 0:
