@@ -2,7 +2,7 @@
 ***09.19.2017***  
 Just to record my every crawler from the very beginning.
 
-***10.04.2017***  
+***09.21.2017***  
 **Scrapy工作原理示意图**  
 ![](Image.png 'scrapy工作原理')  
 
