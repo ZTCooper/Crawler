@@ -1,10 +1,20 @@
 # -*- coding: utf-8 -*-
 #Wikipedia's six degrees of separation
+#把数据存入数据库
+'''
+mysql> describe links;				mysql> describe pages;
++------------+-----------+			+---------+--------------+
+| Field      | Type      |			| Field   | Type         |
++------------+-----------+			+---------+--------------+
+| id         | int(11)   |			| id      | int(11)      |
+| fromPageId | int(11)   |			| url     | varchar(255) |
+| toPageId   | int(11)   |			| created | timestamp    |
+| created    | timestamp |			+---------+--------------+
++------------+-----------+
+'''
 
 import requests
 from bs4 import BeautifulSoup
-import random
-import datetime
 import pymysql
 
 
@@ -47,7 +57,7 @@ def get_links(pageUrl, recursionLevel):
 	if recursionLevel > 4:
 		return
 	pageId = insert_page_IfNotExists(pageUrl)	
-				#第一次返回‘wiki/Kevin_Bacon’的id
+				#第一次返回‘/wiki/Kevin_Bacon’的id
 	headers = {'user_agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063'}
 	html = requests.get('http://en.wikipedia.org' + pageUrl, headers = headers)
 	soup = BeautifulSoup(html.text, 'lxml')
@@ -60,6 +70,7 @@ def get_links(pageUrl, recursionLevel):
 					new_page = link.get('href')
 					pages.add(new_page)
 					get_links(new_page, recursionLevel + 1)
+
 
 get_links('/wiki/Kevin_Bacon', 0)
 cur.close()		#关闭指针对象
