@@ -2,6 +2,7 @@ import requests
 import time
 import re
 from bs4 import BeautifulSoup
+import pymysql
 
 num = 0
 url = 'https://movie.douban.com/top250'
@@ -17,6 +18,7 @@ def get_data(html):
 	soup = BeautifulSoup(html, 'lxml')
 	#电影名
 	titles = soup.select('span.title')
+	global title1, score1, val1, quote1
 	title1 = [title.get_text() for title in titles if not title.get_text().startswith('\xa0/')]
 	#评分
 	scores = soup.select('span.rating_num')
@@ -27,18 +29,40 @@ def get_data(html):
 	val1 = [p.match(val.get_text()).group() for val in vals]
 	#短评
 	quotes = soup.select('span.inq')
-	qoute1 = [quote.get_text() for quote in quotes]
+	quote1 = [quote.get_text() for quote in quotes]
 
+'''
 	mode = '{0:^30}\t{1:^10}\t{2:^10}\t{3:<10}\n'
 	with open('data.txt', 'a') as f:
 		for i in range(25):
 			try:
-				f.write(mode.format(title1[i], score1[i], val1[i], qoute1[i]))
+				f.write(mode.format(title1[i], score1[i], val1[i], quote1[i]))
 			except UnicodeEncodeError:
 				pass
+'''
+
+def connect_db():
+	conn = pymysql.connect(
+		host = '127.0.0.1', 
+		port = 3306, 
+		user = 'root', 
+		password = 'xxx', 
+		db = 'douban',
+		charset = 'utf8'
+	)
+	cur = conn.cursor()
+	get_data(html)
+	for i in range(25):
+		ret = cur.execute(
+			'insert into top250 (title, score, val, quote) values (%s, %s, %s, %s)', 
+			(title1[i], score1[i], val1[i], quote1[i])
+		)
+	conn.commit()
+	cur.close()
+	conn.close()
 
 if __name__ == '__main__':
 	for num in range(0, 226, 25):
-		html = get_html(200)
-		get_data(html)
+		html = get_html(num)
+		connect_db()
 		time.sleep(1)
