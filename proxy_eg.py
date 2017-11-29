@@ -16,3 +16,8 @@ response = urllib.request.urlopen(url)
 html = response.read().decode('utf-8')      #解码
 
 print(html)
+
+
+import requests
+proxies = {"https":'http://10.10.1.10:3128', "https": 'http://10.10.1.10:1080'}
+requests.get(url, proxies = proxies)
