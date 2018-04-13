@@ -5,7 +5,7 @@
 * 创建一个项目
 * 定义Item容器
 * 编写爬虫类
-	* 从网页中提取信息（推荐[*beautifulsoup*](https://github.com/ZTCooper/beautifulsoup)）
+	* 从网页中提取信息（推荐[*beautifulsoup*](https://github.com/ZTCooper/fragmented-py/blob/master/beautifulsoup.md)）
 * 存储数据  
 
 ### 一、创建一个项目：  
